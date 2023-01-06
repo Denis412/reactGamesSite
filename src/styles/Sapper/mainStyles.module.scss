@@ -1,0 +1,23 @@
+.difficulties {
+  display: flex;
+  justify-content: flex-start;
+
+  width: 100vw;
+
+  &Item {
+    margin-left: 30px;
+
+    font-size: 20px;
+
+    cursor: pointer;
+
+    &Active {
+      color: #8989f5;
+      text-decoration: underline;
+    }
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}

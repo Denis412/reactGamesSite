@@ -3,8 +3,8 @@ import Cell from "../Cell/Cell";
 import cl from "./BoardGameFieldSapper.module.css"
 import {findByLabelText} from "@testing-library/react";
 
-const BoardGameFieldSapper = ({columns, rows, spawnBombs}) => {
-    const [gameOver, setGameOver] = useState(false);
+const BoardGameFieldSapper = ({columns, rows, spawnBombs, setGameOver, gameOver, pointerEvents}) => {
+    const [showAllValues, setShowAllValues] = useState(!gameOver);
     const bombsArray = spawnBombs[0];
     const countersArray = spawnBombs[1];
 
@@ -20,7 +20,8 @@ const BoardGameFieldSapper = ({columns, rows, spawnBombs}) => {
 
     const handleOnCellClick = (position) => {
         if(bombsArray[position[0]][position[1]]) {
-            console.log("Game Over!")
+            console.log("Game Over!");
+            setShowAllValues(true);
             setGameOver(true);
             return bombsArray[position[0]][position[1]]
         }
@@ -60,7 +61,7 @@ const BoardGameFieldSapper = ({columns, rows, spawnBombs}) => {
         <div className={cl.mainTable} style={{
             width: `${columns * 30}px`,
             height: `${rows * 30}px`,
-            pointerEvents: `${gameOver ? "none" : "auto"}`
+            pointerEvents: pointerEvents,
         }}>
             {renderTable}
             {gameOver && <h1 className={cl.gameOver}>Game Over! You loosed</h1>}

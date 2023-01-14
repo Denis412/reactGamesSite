@@ -1,5 +1,3 @@
-import {useMemo} from "react";
-
 const countersFill = (counters, bombs, row, column) => { //Функция увеличения счетчиков полей с цифрами
     if(row < 0 || column < 0 || row >= bombs.length || column >= bombs[0].length)
         return 0;
@@ -14,6 +12,8 @@ export const spawnMap = (difficulty) => {
     //----------------Создание и инициализация массивов для хранения бомб и цифр---------------------
     const newTableBombs = new Array(difficulty.rows);
     const newTableCounters = new Array(difficulty.rows);
+
+    console.log("spawn");
 
     for(let i = 0; i < newTableBombs.length; i++) {
         newTableBombs[i] = new Array(difficulty.columns).fill(false);

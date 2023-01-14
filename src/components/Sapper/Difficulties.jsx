@@ -1,6 +1,7 @@
 import React, {useMemo, useState} from 'react';
-import cl from "../../styles/Sapper/mainStyles.module.css"
 import DifficultyItem from "./UI/DifficultyItem";
+
+import cl from "../../styles/Sapper/mainStyles.module.css"
 
 const Difficulties = ({setDifficultyGame}) => {
     const [difficulties, setDifficulties] = useState([

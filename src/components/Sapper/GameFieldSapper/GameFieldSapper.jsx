@@ -13,7 +13,7 @@ const GameFieldSapper = () => {
 
     const bombsAndCounters = useMemo(() => {
         return spawnMap(difficulty);
-    }, [difficulty]); //Создаем карту с бомбами и цифрами
+    }, [difficulty]); //Создаем карту с бомбами и цифрами каждый раз при изменении сложности игры
 
     const setDifficultyGame = (diff) => {
         setDifficulty(diff);

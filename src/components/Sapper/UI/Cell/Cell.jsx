@@ -1,11 +1,11 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import cl from "./Cell.module.css"
 
-const Cell = ({value, position, onClick}) => {
+const Cell = ({value, flag, position, onClick, onDoubleClick}) => {
     const [showValue, setShowValue] = useState(false);
 
     return (
-        <div onClick={() => setShowValue(onClick(position))} className={cl.cell}>
+        <div onDoubleClick={() => setShowValue(onDoubleClick())} onClick={() => setShowValue(onClick(position))} className={cl.cell}>
             {showValue ? value : ""}
         </div>
     );

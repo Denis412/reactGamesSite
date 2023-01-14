@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import cl from "../../../styles/Sapper/mainStyles.module.css"
 
 const DifficultyItem = ({setActiveDifficulty, title, index, active}) => {

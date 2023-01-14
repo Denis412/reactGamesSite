@@ -1,15 +1,16 @@
 import React, {useEffect, useMemo, useState} from 'react';
 import Cell from "../Cell/Cell";
 import cl from "./BoardGameFieldSapper.module.css"
-import {findByLabelText} from "@testing-library/react";
 
 const BoardGameFieldSapper = ({columns, rows, spawnBombs, setGameOver, gameOver, pointerEvents}) => {
-    const [showAllValues, setShowAllValues] = useState(!gameOver);
     const bombsArray = spawnBombs[0];
     const countersArray = spawnBombs[1];
 
+    let timer = useMemo(() => {
+        return setTimeout(() => {}, 250);
+    }, []);
+
     const table = useMemo(() => {
-        console.log("gh")
         const tmp = new Array(rows);
 
         for(let i = 0; i < tmp.length; i++) {
@@ -19,16 +20,23 @@ const BoardGameFieldSapper = ({columns, rows, spawnBombs, setGameOver, gameOver,
     }, [rows, columns]);
 
     const handleOnCellClick = (position) => {
-        if(bombsArray[position[0]][position[1]]) {
-            console.log("Game Over!");
-            setShowAllValues(true);
-            setGameOver(true);
-            return bombsArray[position[0]][position[1]]
-        }
-        else if(countersArray[position[0]][position[1]]){
-            return countersArray[position[0]][position[1]];
-        }
-        return false;
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            if (bombsArray[position[0]][position[1]]) {
+                console.log("Game Over!");
+                setGameOver(true);
+                return bombsArray[position[0]][position[1]]
+            } else if (countersArray[position[0]][position[1]]) {
+                return countersArray[position[0]][position[1]];
+            }
+            return false;
+        }, 250);
+    }
+
+    const handleDoubleClick = () => {
+        if(timer)
+            clearTimeout(timer);
+        return "f";
     }
 
     const renderCells = (row) => {
@@ -39,6 +47,7 @@ const BoardGameFieldSapper = ({columns, rows, spawnBombs, setGameOver, gameOver,
                     position={[row, i]}
                     value={bombsArray[row][i] ? "b" : countersArray[row][i]}
                     onClick={handleOnCellClick}
+                    onDoubleClick={handleDoubleClick}
                 />
             );
         }

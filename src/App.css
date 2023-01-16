@@ -4,6 +4,20 @@
   box-sizing: border-box;
 }
 
+table {
+  border-spacing: 0;
+  border-collapse: collapse;
+}
+
+table tr {
+  display: flex;
+}
+
+table tr td {
+  display: flex;
+  /*color: red;*/
+}
+
 .App {
   display: flex;
   flex-direction: column;

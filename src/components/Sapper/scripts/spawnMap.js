@@ -1,47 +1,42 @@
-const countersFill = (counters, bombs, row, column) => { //Функция увеличения счетчиков полей с цифрами
-    if(row < 0 || column < 0 || row >= bombs.length || column >= bombs[0].length)
-        return 0;
+const checkFillSpace = (map, row, column) => {
+    if(row < 0 || row >= map.length || column < 0 || column >= map[0].length)
+        return;
 
-    if(!bombs[row][column])
-        counters[row][column] += 1;
-    else
-        counters[row][column] = 0;
+    if(map[row][column] < 10)
+        map[row][column] += 1;
 }
 
-export const spawnMap = (difficulty) => {
-    //----------------Создание и инициализация массивов для хранения бомб и цифр---------------------
-    const newTableBombs = new Array(difficulty.rows);
-    const newTableCounters = new Array(difficulty.rows);
+export const spawnMap = (rows, columns, bombs) => {
+    const map = new Array(rows);
 
-    console.log("spawn");
+    for(let i = 0; i < rows; i++)
+        map[i] = new Array(columns).fill(0);
 
-    for(let i = 0; i < newTableBombs.length; i++) {
-        newTableBombs[i] = new Array(difficulty.columns).fill(false);
-        newTableCounters[i] = new Array(difficulty.columns).fill(0);
-    }
-    //------------------------------------------------------------------------------------------------
+    //console.log(map)
 
-    //---------------------------------Заполнение массивов бомб и цифр--------------------------------
-    for (let i = 0; i < difficulty.bombs; i++) {
-        let column = Math.round(Math.random() * (difficulty.columns - 1));
-        let row = Math.round(Math.random() * (difficulty.rows - 1));
+    for(let i = 0; i < bombs; i++) {
+        //console.log(bombs)
+        let row = Math.round(Math.random() * (rows - 1));
+        let column = Math.round(Math.random() * (columns - 1));
 
-        while(newTableBombs[row][column] === true) {
-            column = Math.round(Math.random() * (difficulty.columns - 1));
-            row = Math.round(Math.random() * (difficulty.rows - 1));
+        while(map[row][column] === 10) {
+            row = Math.round(Math.random() * (rows - 1));
+            column = Math.round(Math.random() * (columns - 1));
         }
-        newTableBombs[row][column] = true;
 
-        countersFill(newTableCounters, newTableBombs, row - 1, column - 1);
-        countersFill(newTableCounters, newTableBombs, row - 1, column);
-        countersFill(newTableCounters, newTableBombs, row - 1, column + 1);
-        countersFill(newTableCounters, newTableBombs, row, column - 1);
-        countersFill(newTableCounters, newTableBombs, row, column + 1);
-        countersFill(newTableCounters, newTableBombs, row + 1, column - 1);
-        countersFill(newTableCounters, newTableBombs, row + 1, column);
-        countersFill(newTableCounters, newTableBombs, row + 1, column + 1);
+        map[row][column] = 10;
+
+        checkFillSpace(map, row - 1, column - 1);
+        checkFillSpace(map, row - 1, column);
+        checkFillSpace(map, row - 1, column + 1);
+
+        checkFillSpace(map, row, column - 1);
+        checkFillSpace(map, row, column + 1);
+
+        checkFillSpace(map, row + 1, column - 1);
+        checkFillSpace(map, row + 1, column);
+        checkFillSpace(map, row + 1, column + 1);
     }
-    //------------------------------------------------------------------------------------------------
 
-    return [newTableBombs, newTableCounters];
+    return map;
 }

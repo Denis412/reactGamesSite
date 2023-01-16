@@ -1,5 +1,5 @@
 import React, {useMemo, useState} from 'react';
-import DifficultyItem from "./UI/DifficultyItem";
+import DifficultyItem from "./DifficultyItem";
 
 import cl from "../../styles/Sapper/mainStyles.module.css"
 
@@ -17,7 +17,7 @@ const Difficulties = ({setDifficultyGame}) => {
     }, [difficulties]);
 
     const onClickHandle = (index) => {
-        let tmpDifficulties = difficulties.slice();
+        let tmpDifficulties = [...difficulties];
 
         tmpDifficulties[activeDifficultyIndex].active = false;
         tmpDifficulties[index].active = true;

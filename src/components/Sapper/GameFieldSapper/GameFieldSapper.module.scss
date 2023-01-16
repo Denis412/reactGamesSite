@@ -1,11 +1,8 @@
-.mainContainer {
+.table {
   display: flex;
-  flex-direction: column;
-
   justify-content: center;
-  align-items: center;
-}
 
-.playingFieldContainer {
+  width: 100%;
+
   margin-top: 20px;
 }

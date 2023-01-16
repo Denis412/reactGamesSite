@@ -1,5 +1,5 @@
 import React from 'react';
-import cl from "../../../styles/Sapper/mainStyles.module.css"
+import cl from "../../styles/Sapper/mainStyles.module.css"
 
 const DifficultyItem = ({setActiveDifficulty, title, index, active}) => {
     return (

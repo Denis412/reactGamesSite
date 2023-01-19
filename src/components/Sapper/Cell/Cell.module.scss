@@ -1,5 +1,25 @@
 .cell {
-  color: white;
+  font-weight: bold;
+  font-size: 25px;
+
+  color: blue;
   background-color: gray;
+
   border: 1px solid black;
+
+  //transition: 2s;
+}
+
+.cell:hover {
+  background-color: lightgray;
+
+  border: 1px solid gray;
+
+  //transition: 0.1s;
+}
+
+.activeCell {
+  background-color: lightgray;
+
+  border: 1px solid gray;
 }

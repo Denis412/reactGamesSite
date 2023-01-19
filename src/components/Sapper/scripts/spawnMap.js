@@ -12,10 +12,7 @@ export const spawnMap = (rows, columns, bombs) => {
     for(let i = 0; i < rows; i++)
         map[i] = new Array(columns).fill(0);
 
-    //console.log(map)
-
     for(let i = 0; i < bombs; i++) {
-        //console.log(bombs)
         let row = Math.round(Math.random() * (rows - 1));
         let column = Math.round(Math.random() * (columns - 1));
 

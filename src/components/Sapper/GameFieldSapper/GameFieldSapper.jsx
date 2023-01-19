@@ -4,11 +4,15 @@ import cl from "./GameFieldSapper.module.css"
 import {spawnMap} from "../scripts/spawnMap";
 import {click} from "@testing-library/user-event/dist/click";
 import Td from "../Td/Td";
+import TableHeader from "../GameFieldTable/TableHeader/TableHeader";
+import TableBody from "../GameFieldTable/TableBody/TableBody";
 
 const GameFieldSapper = ({difficulty}) => {
     const [table, setTable] = useState([]);
     const [counterDifficultyChanges, setCounterDifficultyChanges] = useState(1);
-    const [mass, setMass] = useState([]);
+    const [allSpaces, setAllSpaces] = useState({emptyCells: [], valueCells: []});
+    const [currentBombs, setCurrentBombs] = useState(difficulty.bombs);
+    const [loose, setLoose] = useState(false);
 
     useEffect(() => {
         const tmpTable = new Array(difficulty.rows);
@@ -17,17 +21,18 @@ const GameFieldSapper = ({difficulty}) => {
             tmpTable[i] = new Array(difficulty.columns);
 
             for(let j = 0; j < tmpTable[i].length; j++) {
-                tmpTable[i][j] = (
-                    <Td key={i + j}
-                        mass={mass}
-                        clickOnCell={clickOnCell}
-                        position={{row: i, column: j}}
-                    />
-                );
+                tmpTable[i][j] = {
+                    key: (i + j),
+                    clickOnCell: clickOnCell,
+                    position: {row: i, column: j}
+                };
             }
         }
+
         setTable(tmpTable);
+        setCurrentBombs(difficulty.bombs);
         setCounterDifficultyChanges(prev => prev + 1);
+        setLoose(false);
     }, [difficulty]);
 
     const map = useMemo(() => {
@@ -36,79 +41,80 @@ const GameFieldSapper = ({difficulty}) => {
 
     function clickOnCell(row, column) {
         if(map[row][column] === 0) {
-            let y = clickFillSpace(row, column);
-            setMass(y);
-            console.log(mass)
-            console.log(y)
+            setAllSpaces(clickEmptyCell(row, column));
             return "";
         }
 
-        if(map[row][column] === 10)
-            console.log("Game Over!");
+        if(map[row][column] === 10) {
+            setCurrentBombs(prev => prev - 1);
+            setLoose(true);
+        }
 
         return map[row][column];
     }
 
-    const checkFillSpace = (row, column) => {
-        if(row < 0 || row >= difficulty.rows || column < 0 || column >= difficulty.columns)
-            return;
 
-        return map[row][column] === 0;
-    }
 
-    const p = (arr, row, column) => {
-        for(let i = 0; i < arr.length; i++) {
-            if(arr[i]?.row === row && arr[i]?.column === column)
+    const pushing = (cells, row, column) => {
+        for(let i = 0; i < cells.length; i++) {
+            if(cells[i]?.row === row && cells[i]?.column === column)
                 return;
         }
-        arr.push({row, column});
+        cells.push({row, column});
     }
-    const pushArr = (arr, arr2, row, column) => {
+
+    const pushCells = (emptyCells, valueCells, row, column) => {
         if(row < 0 || column < 0 || row >= difficulty.rows || column >= difficulty.columns)
             return;
 
-        if(checkFillSpace(row, column))
-            p(arr, row, column);
+        if(map[row][column] === 0)
+            pushing(emptyCells, row, column);
         else
-            p(arr2, row, column);
+            pushing(valueCells, row, column);
     }
 
-    const pushing = (space, notSpace, row, column) => {
-        pushArr(space, notSpace, row, column);
-        pushArr(space, notSpace, row + 1, column - 1);
-        pushArr(space, notSpace, row + 1, column);
-        pushArr(space, notSpace, row + 1, column + 1);
+    const pushingCell = (emptyCells, valueCells, row, column) => {
+        pushCells(emptyCells, valueCells, row, column);
+        pushCells(emptyCells, valueCells, row + 1, column - 1);
+        pushCells(emptyCells, valueCells, row + 1, column);
+        pushCells(emptyCells, valueCells, row + 1, column + 1);
 
-        pushArr(space, notSpace, row, column - 1);
-        pushArr(space, notSpace, row, column + 1);
+        pushCells(emptyCells, valueCells, row, column - 1);
+        pushCells(emptyCells, valueCells, row, column + 1);
 
-        pushArr(space, notSpace, row - 1, column - 1);
-        pushArr(space, notSpace, row - 1, column);
-        pushArr(space, notSpace, row - 1, column + 1);
+        pushCells(emptyCells, valueCells, row - 1, column - 1);
+        pushCells(emptyCells, valueCells, row - 1, column);
+        pushCells(emptyCells, valueCells, row - 1, column + 1);
     }
 
-    function clickFillSpace(row, column, spaceCell = [], notCell = []) {
-        const spaceCells = spaceCell;
-        const notSpace = notCell;
+    function clickEmptyCell(row, column) {
+        const emptyCells = [];
+        const valueCells = [];
 
-        pushing(spaceCells, notSpace, row, column);
+        pushingCell(emptyCells, valueCells, row, column);
 
-        if(spaceCell.length > 1) {
-            for(let i = 1; i < spaceCell.length; i++)
-                pushing(spaceCells, notSpace, spaceCell[i].row, spaceCell[i].column);
+        if(emptyCells.length > 1) {
+            for(let i = 1; i < emptyCells.length; i++)
+                pushingCell(emptyCells, valueCells, emptyCells[i].row, emptyCells[i].column);
         }
 
-        return [spaceCells, notSpace];
+        return {emptyCells, valueCells};
     }
 
     return (
-        <table className={cl.table}>
-            <tbody>
-                {table.map((value, index) =>
-                    <tr key={index + counterDifficultyChanges * 10}>{value}</tr>
-                )}
-            </tbody>
-        </table>
+        <div className={cl.tableContainer}>
+            <table className={cl.table}>
+                <TableHeader currentBombs={currentBombs}/>
+                <TableBody
+                    table={table}
+                    counterDifficultyChanges={counterDifficultyChanges}
+                    allSpaces={allSpaces}
+                    gameOver={loose}
+                    setCurrentBombs={setCurrentBombs}
+                />
+            </table>
+            {loose && <h1 style={{position: "absolute", top: "50%", textAlign: "center", color: "red", fontSize: "100px"}}>Игра окончена! Ты проиграл!</h1>}
+        </div>
     );
 };
 

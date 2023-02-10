@@ -1,0 +1,15 @@
+.difficulties {
+  display: flex;
+  justify-content: flex-start;
+  width: 100vw; }
+  .difficultiesItem {
+    margin-left: 30px;
+    font-size: 20px;
+    cursor: pointer; }
+    .difficultiesItemActive {
+      color: #8989f5;
+      text-decoration: underline; }
+    .difficultiesItem:hover {
+      text-decoration: underline; }
+
+/*# sourceMappingURL=mainStyles.module.css.map */

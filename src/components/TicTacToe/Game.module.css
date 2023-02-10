@@ -1,0 +1,29 @@
+.gameContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    margin-bottom: 30px;
+}
+
+.gameHeader {
+    display: flex;
+    align-items: center;
+    min-height: 110px;
+}
+
+.gameMain {
+    display: flex;
+    justify-content: space-around;
+
+    width: 100vw;
+}
+
+.leftSide {
+    width: 25%;
+}
+
+.rightSide {
+    position: relative;
+    width: 25%;
+}

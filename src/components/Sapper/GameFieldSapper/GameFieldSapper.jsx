@@ -1,18 +1,18 @@
 import React, {useEffect, useMemo, useState} from 'react';
-import Cell from "../Cell/Cell";
 import cl from "./GameFieldSapper.module.css"
 import {spawnMap} from "../scripts/spawnMap";
-import {click} from "@testing-library/user-event/dist/click";
-import Td from "../Td/Td";
 import TableHeader from "../GameFieldTable/TableHeader/TableHeader";
 import TableBody from "../GameFieldTable/TableBody/TableBody";
+import {clickEmptyCell} from "../scripts/clickEmptyCell";
 
 const GameFieldSapper = ({difficulty}) => {
     const [table, setTable] = useState([]);
     const [counterDifficultyChanges, setCounterDifficultyChanges] = useState(1);
-    const [allSpaces, setAllSpaces] = useState({emptyCells: [], valueCells: []});
+    const [cellOpening, setCellOpening] = useState({emptyCells: [], valueCells: []});
     const [currentBombs, setCurrentBombs] = useState(difficulty.bombs);
     const [loose, setLoose] = useState(false);
+
+    const [openSpace, setOpenSpaces] = useState(false);
 
     useEffect(() => {
         const tmpTable = new Array(difficulty.rows);
@@ -41,7 +41,11 @@ const GameFieldSapper = ({difficulty}) => {
 
     function clickOnCell(row, column) {
         if(map[row][column] === 0) {
-            setAllSpaces(clickEmptyCell(row, column));
+            const activeCells = clickEmptyCell(map, row, column, difficulty.rows, difficulty.columns);
+
+            setOpenSpaces(true);
+
+            setCellOpening(activeCells);
             return "";
         }
 
@@ -49,56 +53,18 @@ const GameFieldSapper = ({difficulty}) => {
             setCurrentBombs(prev => prev - 1);
             setLoose(true);
         }
+        // else {
+        //     if(currentActiveCells?.find(cell => cell.row === row && cell.column === column)) {
+        //
+        //         setAllSpaces(clickEmptyCell(row, column));
+        //         return map[row][column];
+        //     }
+        // }
+
+        //console.log("1");
+        setOpenSpaces(false);
 
         return map[row][column];
-    }
-
-
-
-    const pushing = (cells, row, column) => {
-        for(let i = 0; i < cells.length; i++) {
-            if(cells[i]?.row === row && cells[i]?.column === column)
-                return;
-        }
-        cells.push({row, column});
-    }
-
-    const pushCells = (emptyCells, valueCells, row, column) => {
-        if(row < 0 || column < 0 || row >= difficulty.rows || column >= difficulty.columns)
-            return;
-
-        if(map[row][column] === 0)
-            pushing(emptyCells, row, column);
-        else
-            pushing(valueCells, row, column);
-    }
-
-    const pushingCell = (emptyCells, valueCells, row, column) => {
-        pushCells(emptyCells, valueCells, row, column);
-        pushCells(emptyCells, valueCells, row + 1, column - 1);
-        pushCells(emptyCells, valueCells, row + 1, column);
-        pushCells(emptyCells, valueCells, row + 1, column + 1);
-
-        pushCells(emptyCells, valueCells, row, column - 1);
-        pushCells(emptyCells, valueCells, row, column + 1);
-
-        pushCells(emptyCells, valueCells, row - 1, column - 1);
-        pushCells(emptyCells, valueCells, row - 1, column);
-        pushCells(emptyCells, valueCells, row - 1, column + 1);
-    }
-
-    function clickEmptyCell(row, column) {
-        const emptyCells = [];
-        const valueCells = [];
-
-        pushingCell(emptyCells, valueCells, row, column);
-
-        if(emptyCells.length > 1) {
-            for(let i = 1; i < emptyCells.length; i++)
-                pushingCell(emptyCells, valueCells, emptyCells[i].row, emptyCells[i].column);
-        }
-
-        return {emptyCells, valueCells};
     }
 
     return (
@@ -108,9 +74,10 @@ const GameFieldSapper = ({difficulty}) => {
                 <TableBody
                     table={table}
                     counterDifficultyChanges={counterDifficultyChanges}
-                    allSpaces={allSpaces}
+                    cellOpening={cellOpening}
                     gameOver={loose}
                     setCurrentBombs={setCurrentBombs}
+                    openSpaces={openSpace}
                 />
             </table>
             {loose && <h1 style={{position: "absolute", top: "50%", textAlign: "center", color: "red", fontSize: "100px"}}>Игра окончена! Ты проиграл!</h1>}

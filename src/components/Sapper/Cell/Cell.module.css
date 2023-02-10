@@ -1,0 +1,16 @@
+.cell {
+  font-weight: bold;
+  font-size: 25px;
+  color: blue;
+  background-color: gray;
+  border: 1px solid black; }
+
+.cell:hover {
+  background-color: lightgray;
+  border: 1px solid gray; }
+
+.activeCell {
+  background-color: lightgray;
+  border: 1px solid gray; }
+
+/*# sourceMappingURL=Cell.module.css.map */

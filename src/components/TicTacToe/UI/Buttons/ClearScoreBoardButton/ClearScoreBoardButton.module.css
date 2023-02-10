@@ -1,0 +1,23 @@
+.clearBtn {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+
+    width: 100%;
+    min-height: 50px;
+
+    font-size: 20px;
+
+    background-color: #ce0808;
+
+    border: 1px solid black;
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    transition: 0.5s;
+}
+
+.clearBtn:hover {
+    transform: scale(1.025);
+}

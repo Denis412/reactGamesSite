@@ -4,7 +4,7 @@ import imgBomb from "../../../assets/images/bomb.png"
 import imgFlag from "../../../assets/images/flag.png"
 import ImageSapper from "../ImageSapper";
 
-const Cell = ({onClick, position, allSpaces, gameOver, setCurrentBombs}) => {
+const Cell = ({onClick, position, cellOpening, gameOver, setCurrentBombs, openSpaces}) => {
     const [show, setShow] = useState();
     const [disabledCell, setDisabledCell] = useState(false);
     const [activeCell, setActiveCell] = useState(false);
@@ -16,11 +16,13 @@ const Cell = ({onClick, position, allSpaces, gameOver, setCurrentBombs}) => {
     // }, []);
 
     useEffect(() => {
-        if(allSpaces?.emptyCells?.find(cell => cell.row === position.row && cell.column === position.column) ||
-           allSpaces?.valueCells?.find((cell) => cell.row === position.row && cell.column === position.column)) {
+        if(!openSpaces)
+            return;
+        if(cellOpening?.emptyCells?.find(cell => cell.row === position.row && cell.column === position.column) ||
+            cellOpening?.valueCells?.find((cell) => cell.row === position.row && cell.column === position.column)) {
             clickHandler();
         }
-    }, [allSpaces]);
+    }, [openSpaces]);
 
     const onContextMenuHandler = (e) => {
         e.preventDefault();

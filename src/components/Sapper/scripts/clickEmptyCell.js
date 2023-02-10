@@ -5,40 +5,41 @@ const pushing = (cells, row, column) => {
     }
     cells.push({row, column});
 }
-const pushCell = (map, emptyCell, valuesCells, row, column, rows, columns) => {
+
+const pushCells = (map, emptyCells, valueCells, row, column, rows, columns) => {
     if(row < 0 || column < 0 || row >= rows || column >= columns)
         return;
 
     if(map[row][column] === 0)
-        pushing(emptyCell, row, column);
+        pushing(emptyCells, row, column);
     else
-        pushing(valuesCells, row, column);
+        pushing(valueCells, row, column);
 }
 
-const pushingCell = (map, emptyCell, valuesCells, row, column, rows, columns) => {
-    pushCell(map, emptyCell, valuesCells, row, column, rows, columns);
-    pushCell(map, emptyCell, valuesCells, row + 1, column - 1, rows, columns);
-    pushCell(map, emptyCell, valuesCells, row + 1, column, rows, columns);
-    pushCell(map, emptyCell, valuesCells, row + 1, column + 1, rows, columns);
+const pushingCell = (map, emptyCells, valueCells, row, column, rows, columns) => {
+    pushCells(map, emptyCells, valueCells, row, column, rows, columns);
+    pushCells(map, emptyCells, valueCells, row + 1, column - 1, rows, columns);
+    pushCells(map, emptyCells, valueCells, row + 1, column, rows, columns);
+    pushCells(map, emptyCells, valueCells, row + 1, column + 1, rows, columns);
 
-    pushCell(map, emptyCell, valuesCells, row, column - 1, rows, columns);
-    pushCell(map, emptyCell, valuesCells, row, column + 1, rows, columns);
+    pushCells(map, emptyCells, valueCells, row, column - 1, rows, columns);
+    pushCells(map, emptyCells, valueCells, row, column + 1, rows, columns);
 
-    pushCell(map, emptyCell, valuesCells, row - 1, column - 1, rows, columns);
-    pushCell(map, emptyCell, valuesCells, row - 1, column, rows, columns);
-    pushCell(map, emptyCell, valuesCells, row - 1, column + 1, rows, columns);
+    pushCells(map, emptyCells, valueCells, row - 1, column - 1, rows, columns);
+    pushCells(map, emptyCells, valueCells, row - 1, column, rows, columns);
+    pushCells(map, emptyCells, valueCells, row - 1, column + 1, rows, columns);
 }
 
-export function clickEmptyCell(map, row, column, difficulty) {
-    const emptyCell = [];
-    const valuesCells = [];
+export function clickEmptyCell(map, row, column, rows, columns) {
+    const emptyCells = [];
+    const valueCells = [];
 
-    pushingCell(map, emptyCell, valuesCells, row, column, difficulty.rows, difficulty.columns);
+    pushingCell(map, emptyCells, valueCells, row, column, rows, columns);
 
-    if(emptyCell.length > 1) {
-        for(let i = 1; i < emptyCell.length; i++)
-            pushingCell(map, emptyCell, valuesCells, emptyCell[i].row, emptyCell[i].column, difficulty.rows, difficulty.columns);
+    if(emptyCells.length > 1) {
+        for(let i = 1; i < emptyCells.length; i++)
+            pushingCell(map, emptyCells, valueCells, emptyCells[i].row, emptyCells[i].column, rows, columns);
     }
 
-    return {emptyCell, valuesCells};
+    return {emptyCells, valueCells};
 }

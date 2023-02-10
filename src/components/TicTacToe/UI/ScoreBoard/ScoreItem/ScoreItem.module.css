@@ -1,0 +1,15 @@
+.scoreItem {
+    margin-left: 40px;
+
+    font-size: 20px;
+
+    cursor: pointer;
+}
+
+.scoreItem:first-child {
+    margin-top: 20px;
+}
+
+.scoreItem:not(.scoreItem:first-child) {
+    margin-top: 10px;
+}

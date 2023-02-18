@@ -41,5 +41,5 @@ export function clickEmptyCell(map, row, column, rows, columns) {
             pushingCell(map, emptyCells, valueCells, emptyCells[i].row, emptyCells[i].column, rows, columns);
     }
 
-    return {emptyCells, valueCells};
+    return {emptyCells, valueCells}; //Из-за того, что каждый раз возвращается новый объект, происходит перерендер всего игрового поля. Исправить
 }
